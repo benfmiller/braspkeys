@@ -19,7 +19,7 @@ try:
     write_report(CTRL_KEY+NULL_CHAR+chr(26)+NULL_CHAR*5)
     write_report(CTRL_KEY+NULL_CHAR*7)
     write_report(NULL_CHAR*8)
-except:
+except Exception:
     pass
 
 
