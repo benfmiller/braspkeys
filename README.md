@@ -5,7 +5,7 @@ My PC was built with a motherboard from a dell optiplex, and I was unable to get
 
 So, I needed a solution to turn on my computer remotely without entering any commands.
 
-I installed raspian lite onto my pi zero w then followed this tutorial to use the pi as a USB keyboard device:[http://www.isticktoit.net/?p=1383](http://www.isticktoit.net/?p=1383)
+I installed raspian lite onto my pi zero w then followed this tutorial to use the pi as a USB keyboard device: [http://www.isticktoit.net/?p=1383](http://www.isticktoit.net/?p=1383)
 
 My PC bios lets me turn on the computer every morning and turn it on after blackouts, but I needed a way to get past the error screen.
 
