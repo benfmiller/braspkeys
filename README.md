@@ -1,4 +1,12 @@
-# brasplogin
+# braspkeys
+
+takes input file as input to __main__.py, reads each line, and outputs that line to pc
+
+if no input is given, takes input from standard in and writes each line.
+
+---
+
+
 login script from raspberry pi to desktop
 
 My PC was built with a motherboard from a dell optiplex, and I was unable to get the bios to stop throwing errors at startup. Furthermore, the wifi in my apartment is provided by my university, so I am unable to set up port forwarding. 

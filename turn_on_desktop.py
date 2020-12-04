@@ -1,24 +1,27 @@
 #!/usr/bin/env python3
 import time
+
 NULL_CHAR = chr(0)
 CTRL_KEY = chr(1)
 
+
 def write_report(report):
-    with open('/dev/hidg0', 'rb+') as fd:
+    with open("/dev/hidg0", "rb+") as fd:
         fd.write(report.encode())
 
+
 # press F1, then release
-write_report(NULL_CHAR*2+chr(58)+NULL_CHAR*5)
-write_report(NULL_CHAR*8)
+write_report(NULL_CHAR * 2 + chr(58) + NULL_CHAR * 5)
+write_report(NULL_CHAR * 8)
 
 time.sleep(5)
 
 try:
     # press ctrl, press w, release w, then release all
-    write_report(CTRL_KEY+NULL_CHAR*7)
-    write_report(CTRL_KEY+NULL_CHAR+chr(26)+NULL_CHAR*5)
-    write_report(CTRL_KEY+NULL_CHAR*7)
-    write_report(NULL_CHAR*8)
+    write_report(CTRL_KEY + NULL_CHAR * 7)
+    write_report(CTRL_KEY + NULL_CHAR + chr(26) + NULL_CHAR * 5)
+    write_report(CTRL_KEY + NULL_CHAR * 7)
+    write_report(NULL_CHAR * 8)
 except Exception:
     pass
 
@@ -26,17 +29,17 @@ except Exception:
 time.sleep(30)
 
 # press <space> then release
-write_report(NULL_CHAR*2+chr(44)+NULL_CHAR*5)
-write_report(NULL_CHAR*8)
+write_report(NULL_CHAR * 2 + chr(44) + NULL_CHAR * 5)
+write_report(NULL_CHAR * 8)
 
 time.sleep(10)
 
-# press 1212 then release all 
-write_report(NULL_CHAR*2+chr(30)+NULL_CHAR*5)
-write_report(NULL_CHAR*2+chr(31)+NULL_CHAR*5)
-write_report(NULL_CHAR*2+chr(30)+NULL_CHAR*5)
-write_report(NULL_CHAR*2+chr(31)+NULL_CHAR*5)
-write_report(NULL_CHAR*8)
+# press number then release all
+write_report(NULL_CHAR * 2 + chr(30) + NULL_CHAR * 5)
+write_report(NULL_CHAR * 2 + chr(31) + NULL_CHAR * 5)
+write_report(NULL_CHAR * 2 + chr(30) + NULL_CHAR * 5)
+write_report(NULL_CHAR * 2 + chr(31) + NULL_CHAR * 5)
+write_report(NULL_CHAR * 8)
 
 """
 
