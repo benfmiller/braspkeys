@@ -4,6 +4,13 @@ takes input file as input to __main__.py, reads each line, and outputs that line
 
 if no input is given, takes input from standard in and writes each line.
 
+```[python]
+#!$ 6
+# this sleeps for 6 seconds
+!!$!!
+# this exits
+```
+
 ---
 
 

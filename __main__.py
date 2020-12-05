@@ -18,7 +18,7 @@ for line in fileinput.input():
     a += line
     if len(line) > 4:
         if line[0:3] == "#!$":
-            time.sleep(int(line[3:]))
+            time.sleep(float(line[3:]))
             continue
     if len(line) == 6:
         if line[0:5] == "!!$!!":
