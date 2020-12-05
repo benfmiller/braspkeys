@@ -13,6 +13,20 @@ import fileinput
 #     with open("/dev/hidg0", "rb+") as fd:
 #         fd.write(report.encode())
 
+# a = []
 for line in fileinput.input():
+    a += line
+    if len(line) > 4:
+        if line[0:3] == "#!$":
+            time.sleep(int(line[3:]))
+            continue
+    if len(line) == 6:
+        if line[0:5] == "!!$!!":
+            break
+    # if "\\n" in line or "\\t" in line:
+    #     print("hey")
+    #     line.replace(r"\n", "\n")  # chr(13))
+    #     line.replace(r"\t", "\t")  # chr(9))
     # print(line, end="")
-    keyboard.write(line)
+    # keyboard.write(line)
+# print(a)
