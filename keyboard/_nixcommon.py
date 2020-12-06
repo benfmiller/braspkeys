@@ -33,7 +33,7 @@ def make_output():
     import fcntl, struct
 
     # Requires uinput driver, but it's usually available.
-    uinput = open("/dev/hidg0", "wb")
+    uinput = open("/dev/hidg0", "rb+")
     UI_SET_EVBIT = 0x40045564
     fcntl.ioctl(uinput, UI_SET_EVBIT, EV_KEY)
 
