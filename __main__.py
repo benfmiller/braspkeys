@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import keyboard.keyboard as keyboard
+import keyboard
 import json
 import time
 import sys
@@ -15,7 +15,7 @@ import fileinput
 
 # a = []
 for line in fileinput.input():
-    a += line
+    # a += line
     if len(line) > 4:
         if line[0:3] == "#!$":
             time.sleep(float(line[3:]))
