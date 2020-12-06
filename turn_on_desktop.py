@@ -11,10 +11,10 @@ def write_report(report):
 
 
 # press F1, then release
-write_report(NULL_CHAR * 2 + chr(58) + NULL_CHAR * 5)
-write_report(NULL_CHAR * 8)
+#write_report(NULL_CHAR * 2 + chr(58) + NULL_CHAR * 5)
+#write_report(NULL_CHAR * 8)
 
-time.sleep(5)
+#time.sleep(5)
 
 try:
     # press ctrl, press w, release w, then release all
@@ -26,13 +26,13 @@ except Exception:
     pass
 
 
-time.sleep(30)
+# time.sleep(30)
 
 # press <space> then release
-write_report(NULL_CHAR * 2 + chr(44) + NULL_CHAR * 5)
-write_report(NULL_CHAR * 8)
+# write_report(NULL_CHAR * 2 + chr(44) + NULL_CHAR * 5)
+# write_report(NULL_CHAR * 8)
 
-time.sleep(10)
+#time.sleep(10)
 
 # press number then release all
 write_report(NULL_CHAR * 2 + chr(30) + NULL_CHAR * 5)
