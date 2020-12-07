@@ -27,10 +27,10 @@ def make_uinput():
 
 
 def make_output():
-    if not os.path.exists("/dev/hidg0"):
-        raise IOError("No uinput module found.")
+    # if not os.path.exists("/dev/hidg0"):
+    #    raise IOError("No uinput module found.")
 
-    import fcntl, struct
+    #import fcntl, struct
 
     # Requires uinput driver, but it's usually available.
     uinput = open("/dev/hidg0", "rb+")
@@ -109,8 +109,10 @@ class EventDevice(object):
 
         # Send a sync event to ensure other programs update.
         sync_event = struct.pack(event_bin_format, seconds, microseconds, EV_SYN, 0, 0)
+        print(data_event)
+        return
 
-        self.output_file.write(data_event + sync_event)
+        self.output_file.write(data_event)# + sync_event)
         self.output_file.flush()
 
 
@@ -170,13 +172,15 @@ def aggregate_devices(type_name):
     # power button. Instead of figuring out which keyboard allows which key to
     # send events, we create a fake device and send all events through there.
     try:
-        uinput = make_uinput()
+        #uinput = make_uinput()
+        #print("sup")
         output = make_output()
         fake_device = EventDevice("uinput Fake Device")
-        fake_device._input_file = uinput
+        #fake_device._input_file = uinput
         fake_device._output_file = output
     except IOError as e:
         import warnings
+        print("Error!!!")
 
         warnings.warn(
             "Failed to create a device file using `uinput` module. Sending of events may be limited or unavailable depending on plugged-in devices.",
