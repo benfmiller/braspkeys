@@ -28,5 +28,5 @@ for line in fileinput.input():
     #     line.replace(r"\n", "\n")  # chr(13))
     #     line.replace(r"\t", "\t")  # chr(9))
     # print(line, end="")
-    keyboard.write(line)
+    keyboard.write(line, restore_state_after=False, exact=True)
 # print(a)
