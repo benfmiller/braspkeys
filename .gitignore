@@ -131,3 +131,4 @@ dmypy.json
 .vscode
 keyboardHook.py
 _usb_hid*
+.icon
