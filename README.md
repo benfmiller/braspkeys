@@ -1,6 +1,7 @@
 # braspkeys
+This is not currently working
 
-I don't believe this is currently working and has been on my backlog for a little bit. But it will be updated in the future!! If anyone is curious, the exact mechanism for outputting each keystroke to the computer is being rewritten, though the main functions of the keyboard module remain intact. I don't personally have interest in implementing all keyboard capabilities beyond the usual. It probably wouldn't be too hard to add media keys, for instance, but I have no use for it.
+I don't have much interest in implementing all keyboard capabilities beyond the usual. It probably wouldn't be too hard to add media keys, for instance, but I have no use for it.
 
 takes input file as input to __main__.py, reads each line, and outputs that line to pc
 
