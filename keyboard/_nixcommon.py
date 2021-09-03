@@ -5,11 +5,7 @@ import atexit
 from time import time as now
 from threading import Thread
 from glob import glob
-
-try:
-    from queue import Queue
-except ImportError:
-    from Queue import Queue
+from queue import Queue
 
 event_bin_format = "llHHI"
 
