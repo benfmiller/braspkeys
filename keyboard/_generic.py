@@ -2,11 +2,8 @@
 from threading import Thread, Lock
 import traceback
 import functools
+from queue import Queue
 
-try:
-    from queue import Queue
-except ImportError:
-    from Queue import Queue
 
 class GenericListener(object):
     lock = Lock()
@@ -46,7 +43,9 @@ class GenericListener(object):
             self.lock.release()
 
     def pre_process_event(self, event):
-        raise NotImplementedError('This method should be implemented in the child class.')
+        raise NotImplementedError(
+            "This method should be implemented in the child class."
+        )
 
     def process(self):
         """
@@ -58,7 +57,7 @@ class GenericListener(object):
             if self.pre_process_event(event):
                 self.invoke_handlers(event)
             self.queue.task_done()
-            
+
     def add_handler(self, handler):
         """
         Adds a function to receive each event captured, starting the capturing
