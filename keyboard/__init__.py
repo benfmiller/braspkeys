@@ -95,21 +95,12 @@ _time.monotonic = getattr(_time, "monotonic", None) or _time.time
 with open("key_code_dict.json", "r") as infile:
     codes = json.load(infile)
 
-try:
-    # Python2
-    long, basestring
-    _is_str = lambda x: isinstance(x, basestring)
-    _is_number = lambda x: isinstance(x, (int, long))
-    import Queue as _queue
+# Python3
+_is_str = lambda x: isinstance(x, str)
+_is_number = lambda x: isinstance(x, int)
+import queue as _queue
+from threading import Event as _UninterruptibleEvent
 
-    # threading.Event is a function in Python2 wrappin _Event (?!).
-    from threading import _Event as _UninterruptibleEvent
-except NameError:
-    # Python3
-    _is_str = lambda x: isinstance(x, str)
-    _is_number = lambda x: isinstance(x, int)
-    import queue as _queue
-    from threading import Event as _UninterruptibleEvent
 _is_list = lambda x: isinstance(x, (list, tuple))
 
 # Just a dynamic object to store attributes for the closures.
