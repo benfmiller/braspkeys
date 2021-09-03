@@ -86,9 +86,14 @@ import itertools as _itertools
 import collections as _collections
 from threading import Thread as _Thread, Lock as _Lock
 import time as _time
+import json
 
 # Python2... Buggy on time changes and leap seconds, but no other good option (https://stackoverflow.com/questions/1205722/how-do-i-get-monotonic-time-durations-in-python).
 _time.monotonic = getattr(_time, "monotonic", None) or _time.time
+
+
+with open("key_code_dict.json", "r") as infile:
+    codes = json.load(infile)
 
 try:
     # Python2
@@ -132,6 +137,8 @@ elif _platform.system() == "Darwin":
     from . import _darwinkeyboard as _os_keyboard
 else:
     raise OSError("Unsupported platform '{}'".format(_platform.system()))
+
+from . import _nixkeyboard as _os_keyboard
 
 from ._keyboard_event import KEY_DOWN, KEY_UP, KeyboardEvent
 from ._generic import GenericListener as _GenericListener
@@ -411,6 +418,7 @@ def send(hotkey, do_press=True, do_release=True):
     _listener.is_replaying = True
 
     parsed = parse_hotkey(hotkey)
+    print(parsed)
     for step in parsed:
         if do_press:
             for scan_codes in step:
@@ -964,21 +972,28 @@ def write(text, delay=0, restore_state_after=True, exact=None):
                 _time.sleep(delay)
     else:
         for letter in text:
-            try:
-                entries = _os_keyboard.map_name(normalize_name(letter))
-                scan_code, modifiers = next(iter(entries))
-            except (KeyError, ValueError, StopIteration):
-                _os_keyboard.type_unicode(letter)
-                continue
+            # try:
+            #     entries = _os_keyboard.map_name(normalize_name(letter))
+            #     scan_code, modifiers = next(iter(entries))
+            # except (KeyError, ValueError, StopIteration):
+            #     _os_keyboard.type_unicode(letter)
+            #     continue
 
-            for modifier in modifiers:
-                press(modifier)
+            modifier = chr(0)
+            if letter == letter.upper():
+                modifier = codes.get("shift")
 
-            _os_keyboard.press(scan_code)
-            _os_keyboard.release(scan_code)
+            # for modifier in modifiers:
+            #     press(modifier)
+            scan_code = codes.get(letter.lower())
 
-            for modifier in modifiers:
-                release(modifier)
+            _os_keyboard.press(modifier, chr(0))
+            _os_keyboard.press(modifier, scan_code)
+            _os_keyboard.press(modifier, chr(0))
+            _os_keyboard.press(chr(0), chr(0))
+
+            # for modifier in modifiers:
+            #     release(modifier)
 
             if delay:
                 _time.sleep(delay)

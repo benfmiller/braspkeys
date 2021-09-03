@@ -169,9 +169,9 @@ def listen(callback):
         )
 
 
-def write_event(scan_code, is_down):
+def write_event(mod_code, scan_code):
     build_device()
-    device.write_event(EV_KEY, scan_code, int(is_down))
+    device.write_event(mod_code=mod_code, scan_code=scan_code)
 
 
 def map_name(name):
@@ -185,8 +185,8 @@ def map_name(name):
             yield entry
 
 
-def press(scan_code):
-    write_event(scan_code, True)
+def press(mod_code, scan_code):
+    write_event(mod_code, scan_code)
 
 
 def release(scan_code):
@@ -199,11 +199,11 @@ def type_unicode(character):
 
     for key in ["ctrl", "shift", "u"]:
         scan_code, _ = next(map_name(key))
-        press(scan_code)
+        press(chr(0), scan_code)
 
     for key in hexadecimal:
         scan_code, _ = next(map_name(key))
-        press(scan_code)
+        press(chr(0), scan_code)
         release(scan_code)
 
     for key in ["ctrl", "shift", "u"]:

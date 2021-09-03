@@ -30,32 +30,32 @@ def make_output():
     # if not os.path.exists("/dev/hidg0"):
     #    raise IOError("No uinput module found.")
 
-    #import fcntl, struct
+    # import fcntl, struct
 
     # Requires uinput driver, but it's usually available.
     uinput = open("/dev/hidg0", "rb+")
     return uinput
-    UI_SET_EVBIT = 0x40045564
-    fcntl.ioctl(uinput, UI_SET_EVBIT, EV_KEY)
+    # UI_SET_EVBIT = 0x40045564
+    # fcntl.ioctl(uinput, UI_SET_EVBIT, EV_KEY)
 
-    UI_SET_KEYBIT = 0x40045565
-    for i in range(256):
-        fcntl.ioctl(uinput, UI_SET_KEYBIT, i)
+    # UI_SET_KEYBIT = 0x40045565
+    # for i in range(256):
+    #     fcntl.ioctl(uinput, UI_SET_KEYBIT, i)
 
-    BUS_USB = 0x03
-    uinput_user_dev = "80sHHHHi64i64i64i64i"
-    axis = [0] * 64 * 4
-    uinput.write(
-        struct.pack(uinput_user_dev, b"Virtual Keyboard", BUS_USB, 1, 1, 1, 0, *axis)
-    )
-    uinput.flush()  # Without this you may get Errno 22: Invalid argument.
+    # BUS_USB = 0x03
+    # uinput_user_dev = "80sHHHHi64i64i64i64i"
+    # axis = [0] * 64 * 4
+    # uinput.write(
+    #     struct.pack(uinput_user_dev, b"Virtual Keyboard", BUS_USB, 1, 1, 1, 0, *axis)
+    # )
+    # uinput.flush()  # Without this you may get Errno 22: Invalid argument.
 
-    UI_DEV_CREATE = 0x5501
-    fcntl.ioctl(uinput, UI_DEV_CREATE)
-    UI_DEV_DESTROY = 0x5502
-    # fcntl.ioctl(uinput, UI_DEV_DESTROY)
+    # UI_DEV_CREATE = 0x5501
+    # fcntl.ioctl(uinput, UI_DEV_CREATE)
+    # UI_DEV_DESTROY = 0x5502
+    # # fcntl.ioctl(uinput, UI_DEV_DESTROY)
 
-    return uinput
+    # return uinput
 
 
 class EventDevice(object):
@@ -99,20 +99,23 @@ class EventDevice(object):
         seconds, microseconds, type, code, value = struct.unpack(event_bin_format, data)
         return seconds + microseconds / 1e6, type, code, value, self.path
 
-    def write_event(self, type, code, value):
-        integer, fraction = divmod(now(), 1)
-        seconds = int(integer)
-        microseconds = int(fraction * 1e6)
-        data_event = struct.pack(
-            event_bin_format, seconds, microseconds, type, code, value
-        )
+    def write_event(self, mod_code, scan_code):  # type, code, value):
+        # integer, fraction = divmod(now(), 1)
+        # seconds = int(integer)
+        # microseconds = int(fraction * 1e6)
+        # data_event = struct.pack(
+        #     event_bin_format, seconds, microseconds, type, code, value
+        # )
+        data_event = mod_code + chr(0) + scan_code + (chr(0) * 5)
 
         # Send a sync event to ensure other programs update.
-        sync_event = struct.pack(event_bin_format, seconds, microseconds, EV_SYN, 0, 0)
-        print(data_event)
+        # sync_event = struct.pack(event_bin_format, seconds, microseconds, EV_SYN, 0, 0)
+        print("sup")
+        print(data_event.encode())
         return
 
-        self.output_file.write(data_event)# + sync_event)
+        # TODO
+        self.output_file.write(data_event.encode())  # + sync_event)
         self.output_file.flush()
 
 
@@ -172,14 +175,14 @@ def aggregate_devices(type_name):
     # power button. Instead of figuring out which keyboard allows which key to
     # send events, we create a fake device and send all events through there.
     try:
-        #uinput = make_uinput()
-        #print("sup")
+        # uinput = make_uinput()
         output = make_output()
         fake_device = EventDevice("uinput Fake Device")
-        #fake_device._input_file = uinput
+        # fake_device._input_file = uinput
         fake_device._output_file = output
     except IOError as e:
         import warnings
+
         print("Error!!!")
 
         warnings.warn(
