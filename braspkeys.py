@@ -6,20 +6,29 @@ import argparse
 
 ap = argparse.ArgumentParser()
 ap.add_argument(
-    "input_file",
-    nargs="?",
-    help="path to the input file",
-    type=str,
+    "-v",
+    "--verbose",
+    help="if given, prints to console as well as to output device",
+    action="store_true",
+)
+ap.add_argument(
+    "input_file", nargs="?", help="path to the input file", type=str,
 )
 args = ap.parse_args()
 input_file: str = args.input_file
+verbose: bool = args.verbose
 
 with open("key_code_dict.json", "r") as infile:
     codes: dict = json.load(infile)
 
 
 def process_line(line: str):
-    print(line)
+    # print(line)
+    events_list = list(line)
+    for event in events_list:
+        if verbose:
+            print(event, end="")
+        # write_event()
     # TODO
 
 
@@ -38,7 +47,7 @@ def write_event(self, mod_code: int, scan_code: int):
 def keyboard_input_loop():
     print("keyboard input")
     while True:
-        line = input()
+        line = input() + "\n"
         process_line(line)
 
 
@@ -58,4 +67,7 @@ def main(input_file):
 
 
 if __name__ == "__main__":
-    main(input_file)
+    try:
+        main(input_file)
+    except KeyboardInterrupt as e:
+        print()
