@@ -4,6 +4,8 @@ Sends keys to computer through raspberry pi. If file is given, reads from file a
 import json
 import argparse
 
+# Parsing Args
+# -------------------------------------------------------------------
 ap = argparse.ArgumentParser()
 ap.add_argument(
     "-v",
@@ -30,12 +32,18 @@ args = ap.parse_args()
 input_file: str = args.input_file
 verbose: bool = args.verbose
 dry_run: bool = args.dry_run
+code_print: bool = args.code_print
 
+# reading codes
+# -------------------------------------------------------------------
 with open("key_code_dict.json", "r") as infile:
     codes: dict = json.load(infile)
 
 for name, value in codes.items():
     codes[name] = int(value, 16)
+
+
+# -------------------------------------------------------------------
 
 
 def process_line(line: str):
@@ -44,17 +52,17 @@ def process_line(line: str):
     for event in events_list:
         if verbose or dry_run:
             print(event, end="")
-        if not dry_run:
-            if event.isalpha() and event.isupper():
-                write_event(codes["shift"], 0)
-                write_event(codes["shift"], codes[event.lower()])
-                write_event(codes["shift"], 0)
-            write_event(0, 0)
+        if event.isalpha() and event.isupper():
+            write_event(codes["shift"], 0)
+            write_event(codes["shift"], codes[event.lower()])
+            write_event(codes["shift"], 0)
+        write_event(0, 0)
 
 
 def write_event(mod_code: int, scan_code: int):
     data_event = (chr(mod_code) + chr(0) + chr(scan_code) + (chr(0) * 5)).encode()
-    print(data_event)
+    if code_print:
+        print(data_event)
     if not dry_run:
         with open("/dev/hidg0", "rb+") as output_file:
             pass
