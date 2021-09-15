@@ -48,23 +48,30 @@ for name, value in codes.items():
 
 def process_line(line: str):
     # TODO
-    events_list = list(line)
-    events_list = parse_events(events_list)
+    events_list = parse_events(line)
     for event in events_list:
         if verbose or dry_run:
-            print(event, end="")
-        if event.isalpha() and event.isupper():
-            write_event(codes["shift"], 0)
-            write_event(codes["shift"], codes[event.lower()])
-            write_event(codes["shift"], 0)
+            print(event[2], end="")
+        if event[1] != 0:
+            write_event(0, event[1])
         else:
-            write_event(0, codes[event])
+            write_event(event[0], 0)
+            write_event(event[0], event[1])
+            write_event(event[0], 0)
         write_event(0, 0)
 
 
-def parse_events(events_list: list) -> list:
-    # TODO
-    return events_list
+def parse_events(line: str) -> list:
+    # TODO parse for special chars
+    events_list = list(line)
+    new_events_list = []
+    for event in events_list:
+        if event.isalpha() and event.isupper():
+            new_events_list.append((codes["shift"], codes[event.lower()], event))
+        else:
+            new_events_list.append((0, codes[event], event))
+    # each element (mod, scan, printable)
+    return new_events_list
 
 
 def write_event(mod_code: int, scan_code: int):
@@ -73,8 +80,6 @@ def write_event(mod_code: int, scan_code: int):
         print(data_event)
     if not dry_run:
         with open("/dev/hidg0", "rb+") as output_file:
-            pass
-            # TODO
             output_file.write(data_event)
             output_file.flush()
 
