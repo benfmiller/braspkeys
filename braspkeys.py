@@ -43,6 +43,30 @@ with open("key_code_dict.json", "r") as infile:
 for name, value in codes.items():
     codes[name] = int(value, 16)
 
+shift_key_codes = {
+    "~": "`",
+    "!": "1",
+    "@": "2",
+    "#": "3",
+    "$": "4",
+    "%": "5",
+    "^": "6",
+    "&": "7",
+    "*": "8",
+    "(": "9",
+    ")": "0",
+    "_": "-",
+    "+": "=",
+    "{": "[",
+    "}": "]",
+    "|": "\\",
+    ":": ";",
+    '"': "'",
+    "<": ",",
+    ">": ".",
+    "?": "/",
+}
+
 # -------------------------------------------------------------------
 
 
@@ -63,6 +87,9 @@ def process_line(line: str):
 
 def parse_events(line: str) -> list:
     # TODO parse for special chars
+    if "$" in line:
+        # TODO
+        ...
     events_list = list(line)
     new_events_list = []
     for event in events_list:
