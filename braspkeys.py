@@ -36,12 +36,12 @@ code_print: bool = args.code_print
 
 # reading codes
 # -------------------------------------------------------------------
+
 with open("key_code_dict.json", "r") as infile:
     codes: dict = json.load(infile)
 
 for name, value in codes.items():
     codes[name] = int(value, 16)
-
 
 # -------------------------------------------------------------------
 
@@ -49,6 +49,7 @@ for name, value in codes.items():
 def process_line(line: str):
     # TODO
     events_list = list(line)
+    events_list = parse_events(events_list)
     for event in events_list:
         if verbose or dry_run:
             print(event, end="")
@@ -56,7 +57,14 @@ def process_line(line: str):
             write_event(codes["shift"], 0)
             write_event(codes["shift"], codes[event.lower()])
             write_event(codes["shift"], 0)
+        else:
+            write_event(0, codes[event])
         write_event(0, 0)
+
+
+def parse_events(events_list: list) -> list:
+    # TODO
+    return events_list
 
 
 def write_event(mod_code: int, scan_code: int):
