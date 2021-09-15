@@ -1,16 +1,14 @@
 # braspkeys
 This is not currently working
 
-I don't have much interest in implementing all keyboard capabilities beyond the usual. It probably wouldn't be too hard to add media keys, for instance, but I have no use for it.
-
-takes input file as input to __main__.py, reads each line, and outputs that line to pc
+takes input file as input to braspkeys.py, reads each line, and outputs that line to pc
 
 if no input is given, takes input from standard in and writes each line.
 
 ```[python]
-#!$ 6
+$(#!$ 6) 
 # this sleeps for 6 seconds
-!!$!!
+$(!!$!!)
 # this exits
 ```
 
