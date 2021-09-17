@@ -67,6 +67,17 @@ shift_key_codes = {
     "?": "/",
 }
 
+modifier_codes = {
+    "ctrl": "0x01",
+    "shift": "0x02",
+    "alt": "0x04",
+    "MOD_LMETA": "0x08",
+    "MOD_RCTRL": "0x10",
+    "MOD_RSHIFT": "0x20",
+    "MOD_RALT": "0x40",
+    "MOD_RMETA": "0x80",
+}
+
 # -------------------------------------------------------------------
 
 
@@ -95,6 +106,10 @@ def parse_events(line: str) -> list:
     for event in events_list:
         if event.isalpha() and event.isupper():
             new_events_list.append((codes["shift"], codes[event.lower()], event))
+        elif event in shift_key_codes:
+            new_events_list.append(
+                (codes["shift"], codes[shift_key_codes[event]], event)
+            )
         else:
             new_events_list.append((0, codes[event], event))
     # each element (mod, scan, printable)
