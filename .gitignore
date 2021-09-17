@@ -133,3 +133,4 @@ keyboardHook.py
 _usb_hid*
 .icon
 Session.vim
+.vimspector.json
