@@ -29,6 +29,7 @@ ap.add_argument(
 ap.add_argument(
     "input_file", nargs="?", help="path to the input file", type=str,
 )
+# TODO add wait time between keys
 args = ap.parse_args()
 input_file: str = args.input_file
 verbose: bool = args.verbose
@@ -98,35 +99,79 @@ def process_line(line: str):
             write_event(event[0], event[1])
             write_event(event[0], 0)
         write_event(0, 0)
+    # codes[event.lower()]
+    # (codes["shift"], codes[shift_key_codes[event]], event)
+
+
+def process_special_event(events_list: str) -> tuple:
+    """Gets word list from parse events and turns into list"""
+    in_key_dicts = [
+        x in shift_key_codes or x in modifier_codes or x in codes for x in events_list
+    ]
+    final_keys = []
+    if False not in in_key_dicts:
+        for word in events_list:
+            if word in shift_key_codes:
+                final_keys += ["shift", shift_key_codes[word]]
+            else:
+                final_keys += [word]
+    else:
+        final_keys = ["$", "<"]
+        final_keys += list(" ".join(events_list))
+        final_keys += [">"]
+    return final_keys
+
+
+def calc_chord_list(line: str) -> list:
+    """Parses line for possible chords and calcs them"""
+    chord_list = []
+    if re.search("$<*>", line):
+        dollar_indexes = [i for i, ltr in enumerate(line) if ltr == "$"]
+        end_angle_indexes = [i for i, ltr in enumerate(line) if ltr == ">"]
+        for index in dollar_indexes:
+            if index - 1 >= 0 and line[index - 1] == "\\":
+                continue
+            if index + 1 < len(line) and line[index + 1] == "<":
+                for end_index in end_angle_indexes:
+                    if end_index > index and "$<" not in line[index + 2 : end_index]:
+                        temp_words = line[index + 2 : end_index].split()
+                        completed_codes = process_special_event(temp_words)
+                        chord_list += [completed_codes, index, end_index]
+                        break
+    return chord_list
 
 
 def parse_events(line: str) -> list:
-    """
-    Takes a line and parses the events
-    """
+    """Takes a line and parses the events """
     # TODO parse for special chars
-    if "$<" in line:
-        # TODO
-        ...
+
+    chord_list = calc_chord_list(line)
     events_list = list(line)
+    offset = 0
+    for chord in chord_list:
+        chord[1] -= offset
+        chord[2] -= offset
+        events_list = events_list[: chord[1]] + events_list[chord[2] + 1 :]
+        events_list.insert(chord[1], chord)
+        offset += chord[2] - chord[1] - 1
+
     new_events_list = []
     for event in events_list:
-        if event.isalpha() and event.isupper():
-            new_events_list.append((codes["shift"], codes[event.lower()], event))
-        elif event in shift_key_codes:
-            new_events_list.append(
-                (codes["shift"], codes[shift_key_codes[event]], event)
-            )
+        if event == str:
+            if event.isalpha() and event.isupper():
+                new_events_list.append(("shift", event))
+            elif event in shift_key_codes:
+                new_events_list.append(new_events_list.append(("shift", event)))
+            else:
+                new_events_list.append((event))
         else:
-            new_events_list.append((0, codes[event], event))
-    # each element (mod, scan, printable)
+            new_events_list.append((chord))
+    # each element tup of letters to enter
     return new_events_list
 
 
 def write_event(mod_code: int, scan_code: int):
-    """
-    Does the actual event writing
-    """
+    """Does the actual event writing"""
     data_event = (chr(mod_code) + chr(0) + chr(scan_code) + (chr(0) * 5)).encode()
     if code_print:
         print(data_event)
@@ -137,9 +182,7 @@ def write_event(mod_code: int, scan_code: int):
 
 
 def keyboard_input_loop():
-    """
-    loops input if no file name input was given
-    """
+    """loops input if no file name input was given"""
     print("keyboard input")
     while True:
         line = input() + "\n"
@@ -147,9 +190,7 @@ def keyboard_input_loop():
 
 
 def read_input(file_name):
-    """
-    Reads input from file
-    """
+    """Reads input from file"""
     print("reading from file")
     with open(file_name, "r") as file:
         lines = file.readlines()
@@ -157,9 +198,7 @@ def read_input(file_name):
 
 
 def main():
-    """
-    Calls read input if file given or keyboard_input_loop if no file name
-    """
+    """Calls read input if file given or keyboard_input_loop if no file name"""
     if input_file is None:
         keyboard_input_loop()
     else:
