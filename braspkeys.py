@@ -1,8 +1,9 @@
 """
-Sends keys to computer through raspberry pi. If file is given, reads from file and sends to computer.
+Sends keys to computer through raspberry pi. If file given, reads from file and sends to computer.
 """
-import json
 import argparse
+import json
+import re
 
 # Parsing Args
 # -------------------------------------------------------------------
@@ -82,6 +83,9 @@ modifier_codes = {
 
 
 def process_line(line: str):
+    """
+    Takes an unparsed line and writes the events
+    """
     # TODO
     events_list = parse_events(line)
     for event in events_list:
@@ -97,8 +101,11 @@ def process_line(line: str):
 
 
 def parse_events(line: str) -> list:
+    """
+    Takes a line and parses the events
+    """
     # TODO parse for special chars
-    if "$" in line:
+    if "$<" in line:
         # TODO
         ...
     events_list = list(line)
@@ -117,6 +124,9 @@ def parse_events(line: str) -> list:
 
 
 def write_event(mod_code: int, scan_code: int):
+    """
+    Does the actual event writing
+    """
     data_event = (chr(mod_code) + chr(0) + chr(scan_code) + (chr(0) * 5)).encode()
     if code_print:
         print(data_event)
@@ -127,6 +137,9 @@ def write_event(mod_code: int, scan_code: int):
 
 
 def keyboard_input_loop():
+    """
+    loops input if no file name input was given
+    """
     print("keyboard input")
     while True:
         line = input() + "\n"
@@ -134,14 +147,19 @@ def keyboard_input_loop():
 
 
 def read_input(file_name):
+    """
+    Reads input from file
+    """
     print("reading from file")
-    with open(file_name, "r") as input_file:
-        lines = input_file.readlines()
+    with open(file_name, "r") as file:
+        lines = file.readlines()
         [process_line(line) for line in lines]
 
 
-def main(input_file):
-    input_file = args.input_file
+def main():
+    """
+    Calls read input if file given or keyboard_input_loop if no file name
+    """
     if input_file is None:
         keyboard_input_loop()
     else:
@@ -150,6 +168,6 @@ def main(input_file):
 
 if __name__ == "__main__":
     try:
-        main(input_file)
+        main()
     except KeyboardInterrupt as e:
         print()
