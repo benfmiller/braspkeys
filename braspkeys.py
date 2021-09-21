@@ -90,17 +90,24 @@ def process_line(line: str):
     # TODO
     events_list = parse_events(line)
     for event in events_list:
-        if verbose or dry_run:
-            print(event[2], end="")
-        if event[1] != 0:
-            write_event(0, event[1])
-        else:
-            write_event(event[0], 0)
-            write_event(event[0], event[1])
-            write_event(event[0], 0)
+        write_chord(event, 0, 0)
         write_event(0, 0)
     # codes[event.lower()]
     # (codes["shift"], codes[shift_key_codes[event]], event)
+
+
+def write_chord(to_write: list, mod, scan):
+    if verbose or dry_run:
+        print(to_write[0], end="")
+
+    if to_write[0] in modifier_codes:
+        mod += modifier_codes[to_write[0]]
+    if len(to_write) > 1:
+        write_event(event[0], 0)
+        write_event(event[0], event[1])
+        write_event(event[0], 0)
+    else:
+        write_event(mod, scan)
 
 
 def process_special_event(events_list: str) -> tuple:
