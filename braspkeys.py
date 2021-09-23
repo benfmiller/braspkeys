@@ -27,7 +27,10 @@ ap.add_argument(
     action="store_true",
 )
 ap.add_argument(
-    "input_file", nargs="?", help="path to the input file", type=str,
+    "input_file",
+    nargs="?",
+    help="path to the input file",
+    type=str,
 )
 # TODO add wait time between keys
 args = ap.parse_args()
@@ -70,14 +73,14 @@ shift_key_codes = {
 }
 
 modifier_codes = {
-    "ctrl": "0x01",
-    "shift": "0x02",
-    "alt": "0x04",
-    "MOD_LMETA": "0x08",
-    "MOD_RCTRL": "0x10",
-    "MOD_RSHIFT": "0x20",
-    "MOD_RALT": "0x40",
-    "MOD_RMETA": "0x80",
+    "ctrl": 0x01,
+    "shift": 0x02,
+    "alt": 0x04,
+    "MOD_LMETA": 0x08,
+    "MOD_RCTRL": 0x10,
+    "MOD_RSHIFT": 0x20,
+    "MOD_RALT": 0x40,
+    "MOD_RMETA": 0x80,
 }
 
 # -------------------------------------------------------------------
@@ -97,16 +100,19 @@ def process_line(line: str):
 
 
 def write_chord(to_write: list, mod, scan):
+    """Shifts already processed at this point"""
     if verbose or dry_run:
         print(to_write[0], end="")
-
     if to_write[0] in modifier_codes:
         mod += modifier_codes[to_write[0]]
-    if len(to_write) > 1:
-        write_event(event[0], 0)
-        write_event(event[0], event[1])
-        write_event(event[0], 0)
     else:
+        scan += codes[to_write[0]]
+
+    if len(to_write) == 1:
+        write_event(mod, scan)
+    else:
+        write_event(mod, scan)
+        write_chord(to_write[1:], mod, scan)
         write_event(mod, scan)
 
 
@@ -164,15 +170,15 @@ def parse_events(line: str) -> list:
 
     new_events_list = []
     for event in events_list:
-        if event == str:
+        if type(event) == str:
             if event.isalpha() and event.isupper():
-                new_events_list.append(("shift", event))
+                new_events_list.append(("shift", event.lower()))
             elif event in shift_key_codes:
-                new_events_list.append(new_events_list.append(("shift", event)))
+                new_events_list.append(("shift", shift_key_codes[event]))
             else:
                 new_events_list.append((event))
         else:
-            new_events_list.append((chord))
+            new_events_list.append((event))
     # each element tup of letters to enter
     return new_events_list
 
@@ -181,6 +187,7 @@ def write_event(mod_code: int, scan_code: int):
     """Does the actual event writing"""
     data_event = (chr(mod_code) + chr(0) + chr(scan_code) + (chr(0) * 5)).encode()
     if code_print:
+        print("\t\t", end="")
         print(data_event)
     if not dry_run:
         with open("/dev/hidg0", "rb+") as output_file:
