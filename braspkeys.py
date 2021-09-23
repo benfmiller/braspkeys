@@ -1,9 +1,11 @@
+#!/usr/bin/env python3
 """
 Sends keys to computer through raspberry pi. If file given, reads from file and sends to computer.
 """
 import argparse
 import json
 import re
+import time
 
 # Parsing Args
 # -------------------------------------------------------------------
@@ -27,10 +29,14 @@ ap.add_argument(
     action="store_true",
 )
 ap.add_argument(
-    "input_file",
-    nargs="?",
-    help="path to the input file",
-    type=str,
+    "input_file", nargs="?", help="path to the input file", type=str,
+)
+ap.add_argument(
+    "-w",
+    "--wait-time",
+    help="time in between keypresses in milliseconds",
+    type=int,
+    default=0,
 )
 # TODO add wait time between keys
 args = ap.parse_args()
@@ -38,6 +44,9 @@ input_file: str = args.input_file
 verbose: bool = args.verbose
 dry_run: bool = args.dry_run
 code_print: bool = args.code_print
+wait_time: int = args.wait_time
+
+print(wait_time)
 
 # reading codes
 # -------------------------------------------------------------------
@@ -90,13 +99,10 @@ def process_line(line: str):
     """
     Takes an unparsed line and writes the events
     """
-    # TODO
     events_list = parse_events(line)
     for event in events_list:
         write_chord(event, 0, 0)
         write_event(0, 0)
-    # codes[event.lower()]
-    # (codes["shift"], codes[shift_key_codes[event]], event)
 
 
 def write_chord(to_write: list, mod, scan):
@@ -156,8 +162,6 @@ def calc_chord_list(line: str) -> list:
 
 def parse_events(line: str) -> list:
     """Takes a line and parses the events """
-    # TODO parse for special chars
-
     chord_list = calc_chord_list(line)
     events_list = list(line)
     offset = 0
@@ -170,7 +174,7 @@ def parse_events(line: str) -> list:
 
     new_events_list = []
     for event in events_list:
-        if type(event) == str:
+        if isinstance(event, str):
             if event.isalpha() and event.isupper():
                 new_events_list.append(("shift", event.lower()))
             elif event in shift_key_codes:
@@ -186,6 +190,7 @@ def parse_events(line: str) -> list:
 def write_event(mod_code: int, scan_code: int):
     """Does the actual event writing"""
     data_event = (chr(mod_code) + chr(0) + chr(scan_code) + (chr(0) * 5)).encode()
+    time.sleep(wait_time / 1000)
     if code_print:
         print("\t\t", end="")
         print(data_event)
