@@ -7,10 +7,10 @@ if no input is given, takes input from standard in and writes each line.
 Check the command line help for more information on command line options. The -w flag lets you specify the wait time between each key press in milliseconds
 
 **To type special keys** or "chords", use the form $<ctrl ...> where each word in the $<> is a valid key in the dictionaries in braspkeys.py. The keys will
-then be pressed, held, then released in order. you can escape the sequence with a "\" before the "$". If there is a bad key in the chord, the chord will
+then be pressed, held, then released in order. you can escape the sequence with a "\\" before the "$". If there is a bad key in the chord, the chord will
 be written out as it is typed without the special funcitonality
 
-To make the script sleep, type $<sleep int> where int is the time to sleep in milliseconds
+To make the script sleep, type $\<sleep int\> where int is the time to sleep in milliseconds
 
 The media keys don't work.
 
