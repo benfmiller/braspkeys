@@ -1,21 +1,18 @@
 # braspkeys
-This is not currently working
 
-takes input file as input to braspkeys.py, reads each line, and outputs that line to pc
+Takes input file as input to braspkeys.py, reads each line, and outputs that line to pc
 
 if no input is given, takes input from standard in and writes each line.
 
-```[python]
-$(#!$ 6) 
-# this sleeps for 6 seconds
-$(!!$!!)
-# this exits
-```
+Check the command line help for more information on command line options. The -w flag lets you specify the wait time between each key press in milliseconds
 
----
+**To type special keys** or "chords", use the form $<ctrl ...> where each word in the $<> is a valid key in the dictionaries in braspkeys.py. The keys will
+then be pressed, held, then released in order. you can escape the sequence with a "\" before the "$". If there is a bad key in the chord, the chord will
+be written out as it is typed without the special funcitonality
 
+The media keys don't work.
 
-login script from raspberry pi to desktop
+# Why I Started This Project
 
 My PC was built with a motherboard from a dell optiplex, and I was unable to get the bios to stop throwing errors at startup. Furthermore, the wifi in my apartment is provided by my university, so I am unable to set up port forwarding.
 
@@ -29,15 +26,13 @@ I wrote this script and set it up to run twice every morning with crontab. I als
 
 ## Notes
 
-At one point while setting up the pi as a USB keyboard, I entered one wrong character and had to spend 2 hours finding that error. Beware of typos!
+At one point while setting up the pi as a USB keyboard, I entered one wrong character and spent 2 hours finding it. Beware of typos!
 
-When everything was set up properly, my PC registered the pi as an unrecognized device, so don't be alarmed that the PC doesn't think it's a keyboard
+When everything was set up properly, my PC registered the pi as an unrecognized device, so don't be alarmed that the PC doesn't think it's a keyboard.
 
-By writing the keyboard press to /dev/hidg0, you are effectively writing to the usb keyboard input stream for the PC.
+By writing the keyboard press to /dev/hidg0, you are writing to the usb keyboard input stream for the PC.
 
-## How to customize
-
-Best Practices are to write each key press and release separately so that the PC recognizes everthing in the right order and no funny errors occur.
+## Implementation
 
 Each key press and release consists of 8 bytes. Third byte is the key press. The first byte is the ctrl, shift, and alt keys.
 
