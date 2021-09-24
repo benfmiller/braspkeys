@@ -28,10 +28,7 @@ ap.add_argument(
     action="store_true",
 )
 ap.add_argument(
-    "input_file",
-    nargs="?",
-    help="path to the input file",
-    type=str,
+    "input_file", nargs="?", help="path to the input file", type=str,
 )
 ap.add_argument(
     "-w",
@@ -270,6 +267,9 @@ def process_line(line: str):
     """
     events_list = parse_events(line)
     for event in events_list:
+        if len(event) == 2 and event[0] == "sleep":
+            time.sleep(event[1] / 1000)
+            continue
         write_chord(event, 0, 0)
         write_event(0, 0)
 
@@ -303,6 +303,10 @@ def process_special_event(events_list: str) -> tuple:
                 final_keys += ["shift", shift_key_codes[word]]
             else:
                 final_keys += [word]
+    elif (
+        len(events_list) == 2 and events_list[0] == "sleep" and events_list[1].isdigit()
+    ):
+        final_keys = ["sleep", int(events_list[1])]
     else:
         final_keys = ["$", "<"]
         final_keys += list(" ".join(events_list))
