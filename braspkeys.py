@@ -28,7 +28,10 @@ ap.add_argument(
     action="store_true",
 )
 ap.add_argument(
-    "input_file", nargs="?", help="path to the input file", type=str,
+    "input_file",
+    nargs="?",
+    help="path to the input file",
+    type=str,
 )
 ap.add_argument(
     "-w",
@@ -37,7 +40,6 @@ ap.add_argument(
     type=int,
     default=0,
 )
-# TODO add wait time between keys
 args = ap.parse_args()
 input_file: str = args.input_file
 verbose: bool = args.verbose
@@ -165,11 +167,13 @@ def parse_events(line: str) -> list:
     events_list = list(line)
     offset = 0
     for chord in chord_list:
+        if chord[0][0] == "$":
+            continue
         chord[1] -= offset
         chord[2] -= offset
         events_list = events_list[: chord[1]] + events_list[chord[2] + 1 :]
         events_list.insert(chord[1], chord[0])
-        offset += chord[2] - chord[1] - 1
+        offset += chord[2] - chord[1]
 
     new_events_list = []
     for event in events_list:
