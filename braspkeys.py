@@ -4,7 +4,6 @@ Sends keys to computer through raspberry pi. If file given, reads from file and 
 """
 import argparse
 import json
-import re
 import time
 
 # Parsing Args
@@ -144,7 +143,7 @@ def process_special_event(events_list: str) -> tuple:
 def calc_chord_list(line: str) -> list:
     """Parses line for possible chords and calcs them"""
     chord_list = []
-    if re.search("$<*>", line):
+    if "$<" in line and ">" in line and line.index(">") > line.index("$<"):
         dollar_indexes = [i for i, ltr in enumerate(line) if ltr == "$"]
         end_angle_indexes = [i for i, ltr in enumerate(line) if ltr == ">"]
         for index in dollar_indexes:
@@ -155,7 +154,7 @@ def calc_chord_list(line: str) -> list:
                     if end_index > index and "$<" not in line[index + 2 : end_index]:
                         temp_words = line[index + 2 : end_index].split()
                         completed_codes = process_special_event(temp_words)
-                        chord_list += [completed_codes, index, end_index]
+                        chord_list += [[completed_codes, index, end_index]]
                         break
     return chord_list
 
@@ -169,7 +168,7 @@ def parse_events(line: str) -> list:
         chord[1] -= offset
         chord[2] -= offset
         events_list = events_list[: chord[1]] + events_list[chord[2] + 1 :]
-        events_list.insert(chord[1], chord)
+        events_list.insert(chord[1], chord[0])
         offset += chord[2] - chord[1] - 1
 
     new_events_list = []
