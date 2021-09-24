@@ -3,6 +3,7 @@
 Sends keys to computer through raspberry pi. If file given, reads from file and sends to computer.
 """
 import argparse
+import os
 import time
 
 # Parsing Args
@@ -45,8 +46,6 @@ verbose: bool = args.verbose
 dry_run: bool = args.dry_run
 code_print: bool = args.code_print
 wait_time: int = args.wait_time
-
-print(wait_time)
 
 # reading codes
 # -------------------------------------------------------------------
@@ -375,6 +374,7 @@ def write_event(mod_code: int, scan_code: int):
 def keyboard_input_loop():
     """loops input if no file name input was given"""
     print("keyboard input")
+    print("--------------")
     while True:
         line = input() + "\n"
         process_line(line)
@@ -383,6 +383,7 @@ def keyboard_input_loop():
 def read_input(file_name):
     """Reads input from file"""
     print("reading from file")
+    print("-----------------")
     with open(file_name, "r") as file:
         lines = file.readlines()
         [process_line(line) for line in lines]
@@ -397,6 +398,11 @@ def main():
 
 
 if __name__ == "__main__":
+    if not dry_run and os.geteuid() != 0:
+        raise SystemError(
+            "You need to have root privileges to run this script.\n\
+            Please try again, this time using 'sudo'. Exiting."
+        )
     try:
         main()
     except KeyboardInterrupt as e:
