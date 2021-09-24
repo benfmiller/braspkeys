@@ -12,19 +12,19 @@ ap = argparse.ArgumentParser()
 ap.add_argument(
     "-v",
     "--verbose",
-    help="if given, prints to console as well as to output device",
+    help="prints to console as well as to output device",
     action="store_true",
 )
 ap.add_argument(
     "-d",
     "--dry-run",
-    help="if given, only prints to console and doesn't output to computer",
+    help="only prints to console and doesn't output to computer",
     action="store_true",
 )
 ap.add_argument(
     "-c",
     "--code-print",
-    help="if given, prints byte string that is written to computer",
+    help="prints byte string that is written to computer",
     action="store_true",
 )
 ap.add_argument(
