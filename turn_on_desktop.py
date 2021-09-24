@@ -37,8 +37,8 @@ except Exception:
 # press number then release all
 write_report(NULL_CHAR * 2 + chr(30) + NULL_CHAR * 5)
 write_report(NULL_CHAR * 2 + chr(31) + NULL_CHAR * 5)
-write_report(NULL_CHAR * 2 + chr(30) + NULL_CHAR * 5)
-write_report(NULL_CHAR * 2 + chr(31) + NULL_CHAR * 5)
+write_report(NULL_CHAR * 2 + chr(32) + NULL_CHAR * 5)
+write_report(NULL_CHAR * 2 + chr(33) + NULL_CHAR * 5)
 write_report(NULL_CHAR * 8)
 
 """
