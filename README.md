@@ -10,6 +10,8 @@ Check the command line help for more information on command line options. The -w
 then be pressed, held, then released in order. you can escape the sequence with a "\" before the "$". If there is a bad key in the chord, the chord will
 be written out as it is typed without the special funcitonality
 
+To make the script sleep, type $<sleep int> where int is the time to sleep in milliseconds
+
 The media keys don't work.
 
 # Why I Started This Project
