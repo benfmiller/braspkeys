@@ -1,3 +1,4 @@
 Hello
+$<sleep 1000>
 
 Just saying hi
